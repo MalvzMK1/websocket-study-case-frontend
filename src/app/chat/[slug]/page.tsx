@@ -9,6 +9,7 @@ interface IChatSlug {
 
 interface IMessage {
 	socket_id: string;
+	userName: string;
 	message: string;
 	sentAt: string;
 }
@@ -19,7 +20,8 @@ export default function Chat({ params }: {params: {slug: string}}) {
 	const [receivedMessages, setReceivedMessages] = useState<Array<IMessage>>([]);
 
 	function sendMessage() {
-		socket.emit('send-message', message, (response: Array<IMessage>) => setReceivedMessages(response))
+		socket.emit('send-message', {message, userName: params.slug})
+		setMessage('')
 	}
 
 	useEffect(() => {
@@ -30,14 +32,7 @@ export default function Chat({ params }: {params: {slug: string}}) {
 		}
 	}, [params])
 
-	// socket.on('send-message', (message) => {
-	// 	setReceivedMessages((prevMessages) => [...prevMessages, message]);
-	// });
-	//
-	// socket.on('messages', (messages) => {
-	// 	console.log(messages)
-	// 	setReceivedMessages(messages)
-	// })
+	socket.on('receive-message', messages => setReceivedMessages(messages))
 
 	return (
 		<main className="flex min-h-screen flex-col items-center justify-center p-24">
@@ -45,7 +40,7 @@ export default function Chat({ params }: {params: {slug: string}}) {
 			<div className={'w-1/2 flex-1 bg-purple-900 flex flex-col items-center'}>
 				<div className={'flex-1'}>
 					{receivedMessages.map((message) => (
-						<p key={message.sentAt}>{message.socket_id}: {message.message}</p>
+						<p key={message.sentAt}>{message.userName}: {message.message}</p>
 					))}
 				</div>
 				<input
