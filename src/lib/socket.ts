@@ -1,6 +1,6 @@
 import {io} from "socket.io-client";
 
-const socket = io('http://192.168.0.10:8080', {
+const socket = io(process.env.NEXT_PUBLIC_HOST_API!, {
 	autoConnect: true,
 })
 
