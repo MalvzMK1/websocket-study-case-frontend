@@ -2,7 +2,6 @@
 
 import {useEffect, useState} from "react";
 import socket from "@/lib/socket";
-import {ConnectionManager} from "@/components/connectionManager/page";
 
 export default function Home() {
   const [isConnected, setIsConnected] = useState<boolean>(socket.connected);
